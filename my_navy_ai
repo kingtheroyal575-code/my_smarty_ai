@@ -1,0 +1,31 @@
+import streamlit as st
+import os
+from langchain_groq import ChatGroq
+from langchain_community.tools import DuckDuckGoSearchRun
+from langchain.agents import initialize_agent, AgentType
+
+# Interface ka naam
+st.set_page_config(page_title="Krishna AI")
+st.title("🤖 Krishna's Agentic AI")
+
+# Sidebar mein API Key daalne ka option
+api_key = st.sidebar.text_input(" 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" type="trktyfre78")
+
+if api_key:
+    os.environ["GROQ_API_KEY"] = api_key
+    try:
+        # AI Dimag aur Tools
+        llm = ChatGroq(model_name="llama3-8b-8192")
+        tools = [DuckDuckGoSearchRun()]
+        agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, handle_parsing_errors=True)
+
+        user_input = st.text_input("Mujhse kuch bhi puchiye (Internet se dhoond kar bataunga):")
+        if st.button("Search"):
+            with st.spinner("AI soch raha hai..."):
+                response = agent.run(user_input)
+                st.write(response)
+    except Exception as e:
+        st.error(f"Galti hui: {e}")
+else:
+    st.info "
+    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"
